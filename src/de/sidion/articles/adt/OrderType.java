@@ -2,11 +2,9 @@ package de.sidion.articles.adt;
 
 import java.math.BigDecimal;
 
-public abstract class OrderType {
-    private OrderType() {
-    }
+sealed interface OrderType permits OrderType.Market, OrderType.Limit {
 
-    public static final class Market extends OrderType {
+    final class Market implements OrderType {
         private Market() {
         }
 
@@ -37,7 +35,7 @@ public abstract class OrderType {
         }
     }
 
-    public static final class Limit extends OrderType {
+    final class Limit implements OrderType {
 
         private final BigDecimal limitPrice;
 
@@ -82,11 +80,11 @@ public abstract class OrderType {
         }
     }
 
-    public interface Visitor<T> {
+    interface Visitor<T> {
         T visit(Market m);
 
         T visit(Limit l);
     }
 
-    public abstract <T> T visit(Visitor<T> visitor);
+    <T> T visit(Visitor<T> visitor);
 }
